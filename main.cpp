@@ -1,6 +1,25 @@
 #include <iostream>
+#include <random>
+#include <thread>
+#include <mutex>
+#include <chrono>
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+using namespace std::chrono_literals;
+
+std::mutex forks[2];
+std::mutex mtx;
+
+void think (int id) {
+    static thread_local std::mt19937 rng{std::random_device{}()};
+    std::uniform_int_distribution<int> dist(100,400);
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        std::cout << "Philosopher" << id << "is thinking \n";
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(dist(rng)));
+
+}
+
 int main() {
     // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.
     auto lang = "C++";
