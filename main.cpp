@@ -14,7 +14,7 @@ void think (int id) {
     std::uniform_int_distribution<int> dist(100,400);
     {
         std::lock_guard<std::mutex> lock(mtx);
-        std::cout << "Philosopher" << id << "is thinking \n";
+        std::cout << "Philosopher " << id << " is thinking \n";
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(dist(rng)));
 
@@ -28,14 +28,14 @@ void eat (int id) {
 
     {
         std::lock_guard<std::mutex> lock(mtx);
-        std::cout << "Philosopher" << id << "starts eating. \n";
+        std::cout << "Philosopher " << id << " starts eating. \n";
     }
 
     std::this_thread::sleep_for(200ms);
 
     {
         std::lock_guard<std::mutex> lock(mtx);
-        std::cout << "Philosopher" << id << "finishes eating. \n";
+        std::cout << "Philosopher " << id << " finishes eating. \n";
     }
 }
 
@@ -45,19 +45,18 @@ void philosopher (int id, int rounds) {
         eat(id);
     }
     std::lock_guard<std::mutex> lock(mtx);
-    std::cout << "Philosopher" << id << "is done. \n";
+    std::cout << "Philosopher " << id << " is done. \n";
 }
 
 int main() {
-    // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.
-    auto lang = "C++";
-    std::cout << "Hello and welcome to " << lang << "!\n";
+    const int rounds = 5;
 
-    for (int i = 1; i <= 5; i++) {
-        // TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        std::cout << "i = " << i << std::endl;
-    }
+    std::thread p0(philosopher, 0, rounds);
+    std::thread p1(philosopher, 1, rounds);
 
+    p0.join();
+    p1.join();
+
+    std::cout << "All Philosophers finished eating. \n";
     return 0;
-    // TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }
