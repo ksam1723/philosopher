@@ -20,6 +20,25 @@ void think (int id) {
 
 }
 
+void eat (int id) {
+    std::mutex& left = forks[id];
+    std::mutex& right = forks[(id+1) % 2];
+
+    std::scoped_lock lock(left, right);
+
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        std::cout << "Philosopher" << id << "starts eating. \n";
+    }
+
+    std::this_thread::sleep_for(200ms);
+
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        std::cout << "Philosopher" << id << "finishes eating. \n";
+    }
+}
+
 int main() {
     // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.
     auto lang = "C++";
