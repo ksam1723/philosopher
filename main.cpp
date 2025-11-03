@@ -39,6 +39,15 @@ void eat (int id) {
     }
 }
 
+void philosopher (int id, int rounds) {
+    for (int i = 0; i < rounds; i++) {
+        think(id);
+        eat(id);
+    }
+    std::lock_guard<std::mutex> lock(mtx);
+    std::cout << "Philosopher" << id << "is done. \n";
+}
+
 int main() {
     // TIP Press <shortcut actionId="RenameElement"/> when your caret is at the <b>lang</b> variable name to see how CLion can help you rename it.
     auto lang = "C++";
